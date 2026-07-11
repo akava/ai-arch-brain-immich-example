@@ -4,7 +4,6 @@ type: risk-register
 agent: risk-assessment (legacy SKILL-006)
 status: active
 confidence: medium
-date: 2026-07-11
 sources: [logs/2026-07-11-immich-architecture-overview-risk-assessment.md]
 ---
 
