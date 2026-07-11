@@ -1,0 +1,98 @@
+---
+title: M1 — Managed-Hosting Pilot
+type: arch-transition
+milestone: M1
+status: active
+confidence: low — design directions are proposed-ADR-backed, not approved; the load-bearing throughput figure NFR-003 is [TBD] (unmeasured). Mechanisms validated; commitments and sizing pending.
+---
+
+# M1 — Managed-Hosting Pilot
+
+> **Simulated demonstration engagement.** The engagement, client, and all pilot figures are fiction created to exercise this repository's operating model (`core/1.ARCH-CONTEXT.md` → Engagement); run outputs are unreviewed AI drafts. The subject system (Immich) and its documented behaviour are real, drawn only from first-party docs under `input/`.
+
+The delivery-phase view (`core/0.ARCH-METAMODEL.md` → Transitions): how this milestone moves the architecture from `core/2.ARCH-BASELINE.md` toward `core/3.ARCH-TARGET.md`. Tracked items are referenced by ID, never restated here.
+
+## Goal
+
+Stand up the managed-hosting pilot for **up to 50 isolated single-tenant Immich instances**, proving the **operator-side capabilities that wrap stock Immich** — per-instance store HA, a hardened scalable ML tier, media storage & backup, and a bounded-window upgrade procedure — while keeping the stock upgrade path and single-codebase deployment model intact (`CON-001`). The milestone's vision slice is the client-stated pilot shape (`core/1.ARCH-CONTEXT.md` → Goals, client-stated fiction); its enabler package is `E-01`…`E-04` below (`core/transitions/ENABLER-CATALOG.md`).
+
+The pilot proves operability *around* stock Immich — it does not modify the stock containers. Immich is documented for single-node self-hosting; the operator capabilities are the layer the upstream docs do not provide.
+
+## Scope & work streams
+
+Each stream is tracked in `core/` by the cited IDs; this file is the phase view over them, not a second registry.
+
+| WS | Scope | Realizes | Tracked in `core/` |
+|----|-------|----------|--------------------|
+| **WS1 — Store HA** | Per-instance operator-managed HA for Postgres and Redis, endpoint-transparent to the stock containers; shared cross-instance store pools rejected for blast radius. Media store protection handled by WS3. | `E-01` / NFR-001 | ADR-003 (proposed); R-01; OQ#1; TARGET §3.3; BASELINE §3.3 |
+| **WS2 — ML tier** | Dedicated remote-ML tier behind an operator-run, health-checked **load balancer**; **channel hardening** (auth + TLS at a reverse proxy fronting port 3003, network isolation); **benchmark** of per-asset inference time to size the tier and decide the NFR-003 commitment. Facial Recognition stays server-bound, out of scope. | `E-02` / NFR-003, NFR-004, NFR-006 | ADR-004 (proposed); R-03, R-06; AI-001; OQ#2, OQ#3; TARGET §3.1/§3.5; BASELINE §3.1 |
+| **WS3 — Media storage & backup** | Per-instance dedicated media volumes on supported (non-NTFS/FAT) filesystems; operator snapshot + off-instance replication backup honoring the documented **DB-first-then-filesystem** ordering; stock DB dumps retained and copied off-instance; Redis-queue-state durability. | `E-03` / NFR-005 | ADR-005 (proposed); R-01 (Redis via ADR-003); TARGET §3.4/§3.3; BASELINE §3.4/§3.3 |
+| **WS4 — Upgrade procedure** | A controlled maintenance-window upgrade covering server + startup Postgres migrations + version-aligned ML restart, rehearsed within NFR-002's **≤15 min** window; operator customizations kept minimal and reversible to preserve the stock upgrade path. | `E-04` / NFR-002, CON-001 | R-05; CON-001; TARGET §3.3; BASELINE §3.3 |
+
+## Baseline → target deltas (enabler-shaped)
+
+Keyed by the shared skeleton (`core/0.ARCH-METAMODEL.md`): baseline §N → target §N. One row per enabler; each acceptance criterion is the pilot gate already recorded against its ADR / NFR. Full statement, benefit, and acceptance detail live once here (build detail); the catalog links in.
+
+### E-01 — Per-instance store HA · §3.3 → §3.3
+
+- **Type:** infrastructure
+- **Delta:** stock offers no HA path for the three stateful stores (§3.3); the pilot adds operator-managed per-instance HA Postgres/Redis, endpoint-transparent to the untouched stock containers.
+- **Benefit hypothesis:** brings each instance's API/serving path within NFR-001's ≤ 43.8 min/month unavailability budget, which stock alone cannot meet (R-01, OQ#1).
+- **Acceptance criteria (pilot gate):** a **failover drill** demonstrating store failover within the availability budget (ADR-003 pilot gate). *Media store protection is E-03, not this gate.*
+
+### E-02 — Hardened scalable ML tier · §3.1 → §3.1 (+ channel §3.5)
+
+- **Type:** architectural + infrastructure (with an exploration lead: the benchmark)
+- **Delta:** stock multi-URL ML dispatch is sequential with no load balancing (§3.1) and the port-3003 channel has no built-in security (§3.5/§1.2); the pilot adds an operator-run health-checked LB fronting a dedicated ML tier and terminates auth + TLS at a reverse proxy on an isolated segment.
+- **Benefit hypothesis:** balanced, health-checked dispatch reaches the NFR-003/004 aggregate throughput, and the hardened channel lets the ML tier carry real user photo previews safely (NFR-006, R-03, R-06).
+- **Acceptance criteria (pilot gates):** (a) the **NFR-003 benchmark gate** — measured per-asset inference time sizing tier `N` and deciding the go/no-go on the 72 h / 1M commitment (AI-001, OQ#2); (b) the **secured channel** in place before the tier carries real content (NFR-006 "before pilot", OQ#3). *NFR-003's 72 h figure stays **[TBD]** until (a) is measured — the enabler is delivered against a benchmarked, not assumed, target.*
+
+### E-03 — Media storage & backup capability · §3.4 → §3.4 (+ backup §3.3)
+
+- **Type:** infrastructure
+- **Delta:** Immich automates DB-only backup (metadata, no media) and NTFS/FAT are unsupported (§3.3/§3.4); the pilot adds per-instance media volumes on supported filesystems with operator-supplied media backup, plus Redis-queue-state durability.
+- **Benefit hypothesis:** provisions ≥ 250 TB aggregate (5 TB × 50) with recoverable media and queue state, closing the operator-supplied-media-backup gap NFR-005 names (T18).
+- **Acceptance criteria (pilot gate):** a **restore rehearsal** that recovers an instance honoring the documented **DB-first-then-filesystem** consistency ordering (ADR-005). Transcode storage-growth headroom % stays [TBD] until telemetry exists.
+
+### E-04 — Bounded-window upgrade procedure · §3.3 → §3.3
+
+- **Type:** architectural
+- **Delta:** migrations apply at server startup and the ML tier is version-aligned, with no stock rolling/zero-downtime path (§3.3); the pilot establishes an upgrade procedure over the split/HA topology, kept minimal and reversible per CON-001.
+- **Benefit hypothesis:** upgrades complete within NFR-002's window without breaking customized instances, preserving the stock upgrade path (R-05, CON-001). Note the co-constraint: a ≤15 min upgrade spends ~34% of the NFR-001 monthly budget.
+- **Acceptance criteria (pilot gate):** a **≤ 15-min upgrade rehearsal** on a split/HA instance, with migration duration measured at pilot scale (NFR-002; the fits-window sub-claim is unverifiable from evidence until measured — R-05).
+
+### Gap discipline (§ reviewed, no delta — carried over)
+
+Skeleton sections this milestone reviewed but does not move, recorded not omitted (`core/0.ARCH-METAMODEL.md`, TOGAF gap analysis):
+
+- **§1.1–§1.6, §2** — reference architecture, building blocks, and tech stack: stock Immich carries over unchanged (CON-001); no target delta. §1.2 is touched only as the location of the ML-channel fact E-02 hardens.
+- **§4 (Interface & Contract Conventions)** — not populated in TARGET; no phase delta. Carried over.
+- **§6 (Deployment & Environments)** — per-instance rollout staging (below) is phase sequencing, not a TARGET §6 rule; §6 itself carries over.
+- **§7** — pointer section only.
+
+## Coexistence approach
+
+- **Stock containers untouched** (`CON-001`): the operator capabilities (`E-01`…`E-04`) **wrap around** stock Immich — HA endpoints are transparent to the stock containers, the LB/proxy front stock `immich-machine-learning`, and backup operates on the stock stores/volumes. No stock modification; customizations minimal and reversible so the stock upgrade path survives (§1.5, §5 when populated carry the coexistence/gating realization).
+- **Per-instance rollout staging:** instances are brought onto the operator capabilities one at a time — each instance's HA, ML-tier binding, backup, and upgrade rehearsal validated on that instance before the next — bounding blast radius during the pilot (up to 50 instances).
+
+## Binding gates
+
+Design work in this phase passes the gates in `core/3.ARCH-TARGET.md` §5 (`core/AGENT-RULES.md` §9 → binding gates apply to design work):
+
+- **§5 delivery & operating constraints** — the release/change/window gates the design must fit. *Watch:* TARGET §5 is a TODO stub (unpopulated); the constraints binding this pilot are carried by the requirement/constraint rows (`NFR-`/`CON-`) and their §3 responses until §5 is populated. Flagged in Open / watch.
+- **§5.2 ownership gate** — no design without a clear accountable owner. Satisfied at role granularity via `core/arch-processes/ownership-map.md`: **Hosting Platform Lead** (store HA — WS1/E-01), **ML Platform Owner** (ML tier + channel — WS2/E-02), **Immich Runtime Owner** (upgrades — WS4/E-04). WS3 media/backup falls under the Hosting Platform Lead's stateful-store operability scope. Roles are client-confirmed at role level (demo fiction); name-level confirmation is out of scope for the simulated engagement.
+
+## Open / watch
+
+Referenced by ID; the Delivery Enablement stream (`core/arch-processes/work-streams/delivery-enablement.md`) owns chasing these.
+
+- **AI-001** — decide the NFR-003 disposition (run the ML per-asset benchmark before committing the 72 h / 1M figure, or re-scope/gate it in M1). Gates the E-02 benchmark acceptance criterion. Checkpoint 2026-07-18.
+- **OQ#1** — multi-node HA/failover path for the shared stores still absent (store HA design + sizing need evidence beyond the doc set). Gates E-01.
+- **OQ#2** — per-node/per-GPU ML throughput in assets/sec still unquantified; the NFR-003 figure is unmeasurable from evidence. Gates E-02's benchmark.
+- **OQ#3** — remote-ML channel security remnant: operator must supply auth / transport encryption / network isolation the docs do not specify. Gates E-02's channel hardening.
+- **Proposed ADRs awaiting approval** — ADR-003, ADR-004, ADR-005 are all `proposed`. The deltas above are written at `[Tentative]` confidence against them; the `active` → `delivered` flip and any baseline promotion are the architect's explicit call on approval (`core/AGENT-RULES.md` §9).
+- **TARGET §5 unpopulated** — the binding-gate section is a stub; populating it is architect-approved content work (watch, not an M1 deliverable).
+
+## Low-level design
+
+The teams' per-feature build-approval (permit-to-build) artefacts are the low-level design for `E-01`…`E-04`; they live with the delivery teams and are referenced here, not stored (`core/transitions/README.md` → HLA here, LLD with the teams). None registered yet.

@@ -7,7 +7,7 @@ This repository is a structured system for AI-assisted architecture work across 
 This public repository is both a **template** and a **worked demo**:
 
 - The **`template` tag** holds the clean skeleton — every content section carries a `> TODO:` placeholder describing what belongs there; nothing engagement-specific is filled in.
-- **`main`** additionally contains **demo runs**: the architecture chain executed unattended by AI agents against the public documentation of a well-known open-source project, so you can see what the brain produces — syntheses, component specs, contracts, NFR analyses, risks, ADRs — without any confidential material. Demo outputs are agent drafts, deliberately left unreviewed.
+- **`main`** additionally contains **demo runs**: the architecture chain executed against the public documentation of **Immich** (a self-hosted photo/video platform) across three simulated discovery/design sessions — D1 architecture overview, D2 ML & media deep dive, and D3 managed-hosting scale-up design. The AI agents run unattended, with the orchestrating agent acting as the architect, so you can see what the brain produces — syntheses, component specs, contracts, NFR analyses, risks, ADRs — without any confidential material. Demo outputs are unreviewed agent drafts; the proposed ADRs are deliberately left unapproved.
 
 It is designed to:
 

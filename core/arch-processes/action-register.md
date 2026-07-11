@@ -67,6 +67,7 @@ Both transitions are proposed and approved before the row is touched (see Author
 
 | ID | Action | Why / what it unblocks | Owner | Next checkpoint | Status | Links | Trigger / depends-on |
 |----|--------|------------------------|-------|-----------------|--------|-------|----------------------|
+| AI-001 | Decide the NFR-003 disposition: run the ML per-asset benchmark before committing the 72h/1M figure, or re-scope/gate it in transition M1 | Unblocks NFR-003's [TBD] throughput commitment and the ADR-004 benchmark gate — ADR-004 fixes ML topology but not the go/no-go on the 72h/1M target; without this the pilot capacity plan rests on an unmeasured figure | Simulated architect (demo) | 2026-07-18 | open | NFR-003, OQ#2, R-03, [[ADR-004]] | benchmark results or M1 scoping |
 
 
 ---
