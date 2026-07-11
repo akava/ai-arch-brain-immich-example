@@ -1,0 +1,12 @@
+# NOTICE — third-party documentation attribution
+
+This repository's own content (machinery, templates, and the demo-engagement artifacts) is
+licensed under the MIT License (see LICENSE).
+
+The evidence files under `input/systems/immich/` are abridged markdown conversions of
+first-party documentation of the Immich project (https://github.com/immich-app/immich,
+https://docs.immich.app), included solely as the evidence base for the simulated demonstration
+engagement described in the README. Each file carries its `source_url` and fetch date in its
+frontmatter. Immich is an open-source project licensed under AGPL-3.0; its documentation and
+trademarks belong to their respective owners. This repository is not affiliated with or endorsed
+by the Immich project.
