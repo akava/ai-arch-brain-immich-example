@@ -3,9 +3,9 @@ title: Architecture Risk & Tech-Debt Register (living)
 type: risk-register
 agent: risk-assessment (legacy SKILL-006)
 status: active
-confidence: —
-date: —
-sources: []
+confidence: medium
+date: 2026-07-11
+sources: [logs/2026-07-11-immich-architecture-overview-risk-assessment.md]
 ---
 
 # Architecture Risk & Tech-Debt Register
@@ -14,7 +14,10 @@ This is the living, canonical register of architecture risks and tech-debt items
 
 Status vocabulary: **open / mitigating / accepted / resolved** (source nuance kept in parentheses).
 
-> TODO: one row per risk or tech-debt item, added by the `risk-assessment-agent`. Each row: stable `R-NN` ID (never reused), type (`risk` / `tech_debt`), cause → consequence description, likelihood, impact, derived severity, status, mitigation or acceptance (citing the ADR when accepted by decision), accountable owner, the trigger that re-opens review, and the source assessment log.
-
 | ID | Type | Description (cause → consequence) | L | I | Severity | Status | Mitigation / acceptance | Owner | Review trigger | Source |
 |----|------|-----------------------------------|---|---|----------|--------|------------------------|-------|----------------|--------|
+| R-01 | risk | Three stateful stores (Postgres system-of-record, Redis queue state, filesystem media — baseline §1.1/§1.2) carry **no documented HA, replication, or failover path** in the first-party docs → a single-node stateful failure takes a customer instance offline, breaching the managed-hosting commercial-availability goal (context §Problem statement). | high | high | critical | open | Design operator-side HA around stock stores (Postgres replication/failover, Redis persistence/HA, resilient shared media storage) as scale-up enablers; do not assume upstream provides it. | Simulated architect (demo) | Resolution of OQ#1 (multi-node/HA posture); start of D2/D3 availability design. | logs/2026-07-11-immich-architecture-overview-risk-assessment.md |
+| R-02 | risk | Default packaging co-locates the **api and microservices workers in one immich-server container** (baseline §1.2, synthesis T3/T5) → under hosting load, heavy background jobs (thumbnailing, transcoding, ML dispatch) contend with request serving in the same deployable, degrading API latency. | medium | high | high | open | Adopt the documented env-var worker split (`IMMICH_WORKERS_INCLUDE`/`EXCLUDE`) as the baseline hosting topology; size api and microservices tiers independently. | Operator engineering (demo) | OQ#1 resolution; observed API-latency degradation under job load in pilot. | logs/2026-07-11-immich-architecture-overview-risk-assessment.md |
+| R-03 | risk | The ML service is **memory-intensive with no quantified throughput or hardware sizing** (baseline §1.2, synthesis T4) → if co-located with the server, model loading causes memory pressure and OOM/eviction; even when separated, capacity cannot be planned, risking ML backlog on the ingest job chain. | medium | high | high | open | Deploy immich-machine-learning as a separate, independently-sized unit; quantify per-node throughput and memory need before committing hosting capacity plans. | Operator engineering (demo) | Resolution of OQ#2 (ML throughput/hardware sizing); D3 ML-throughput scale-up work. | logs/2026-07-11-immich-architecture-overview-risk-assessment.md |
+| R-04 | risk | Discovery evidence is **first-party documentation only — no code inspection, operator telemetry, or stakeholder interviews** (context §Budget/scope; synthesis Sources) → architecture judgments (esp. runtime, scaling, HA behaviour) rest on documented intent, not observed reality; the docs may lag the codebase, so scale-up design may build on stale or incomplete premises. | high | medium | high | open | Treat all as-is facts as documentation-confidence; validate load-bearing assumptions against code/telemetry before the pilot commits; flag undocumented areas (HA, throughput) as explicit gaps not silent assumptions. | Simulated architect (demo) | Availability of code inspection, telemetry, or stakeholder input; before pilot design sign-off. | logs/2026-07-11-immich-architecture-overview-risk-assessment.md |
+| R-05 | tech_debt | The engagement's central tension is preserving Immich's **stock upgrade path / single-codebase deployment** while running split/customized multi-tier topologies (context §Problem statement; synthesis T5) → upgrade behaviour under the env-var-split and operator-added-HA deployments is undocumented, so upgrades may break customized instances or require bespoke operator runbooks. | medium | high | high | open | Establish and test an upgrade procedure against the split/HA hosting topology before pilot; keep operator customizations minimal and reversible to protect the stock upgrade path. | Operator engineering (demo) | First upgrade rehearsal on a split/HA topology; any upstream release changing packaging or migration behaviour. | logs/2026-07-11-immich-architecture-overview-risk-assessment.md |

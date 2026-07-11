@@ -37,6 +37,17 @@ Reuses the `core/0.ARCH-METAMODEL.md` convention:
 
 | Canonical | Variants seen | Definition | Status | Source / owner |
 |-----------|---------------|------------|--------|----------------|
+| **Immich** | — | Self-hosted photo and video management platform; the system-of-interest of this engagement. Client-server architecture, AGPL v3. | tentative | 2026-07-11 D1 synthesis; `input/systems/immich/immich-repo-readme.md` |
+| **immich-server** | "Immich Server", "the server", "the backend" | The Nest.js/Node.js backend container: serves the REST API and runs the background-job workers. Follows hexagonal architecture. | tentative | 2026-07-11 D1 synthesis; `input/systems/immich/immich-architecture-overview.md` |
+| **immich-machine-learning** | "the ML service", "machine learning service" | Python/FastAPI service to which all ML operations are externalized; runs ONNX models; separately deployable or disableable. | confirmed | 2026-07-11 ADR-001 (approved); `input/systems/immich/immich-architecture-overview.md` |
+| **api worker** | "api" (worker) | Worker inside `immich-server` that responds to API requests for data and files from the web and mobile clients. | confirmed | 2026-07-11 ADR-002 (approved); `input/systems/immich/immich-jobs-and-workers.md` |
+| **microservices worker** | "microservices", `immich-microservices` (as the split-out container / diagram label) | Worker inside `immich-server` that handles background jobs (e.g. thumbnail generation, video encoding). Runs in the same container as the api worker by default; can be split into a separate `immich-microservices` container via env vars. | confirmed | 2026-07-11 ADR-002 (approved); `input/systems/immich/immich-jobs-and-workers.md` (see synthesis C1) |
+| **split workers** | "worker split", "separate API and microservices containers" | Optional deployment configuration distributing the api and microservices workers across separate containers via `IMMICH_WORKERS_INCLUDE` / `IMMICH_WORKERS_EXCLUDE`. | confirmed | 2026-07-11 ADR-002 (approved); `input/systems/immich/immich-jobs-and-workers.md` |
+| **BullMQ** | — | Library used over Redis to manage Immich's background-job queues, including job chaining. | confirmed | 2026-07-11 ADR-002 (approved); `input/systems/immich/immich-architecture-overview.md` |
+| **Redis** (job-queue role) | "redis" (container) | In-memory store used via BullMQ for background-job queue management; holds queue state. | confirmed | 2026-07-11 ADR-002 (approved); `input/systems/immich/immich-architecture-overview.md` |
+| **Postgres** (system-of-record role) | "postgres" (container), "the database" | Persistent data store for access/authorization, users, albums, assets, sharing, and ML model settings; Immich's system of record. | tentative | 2026-07-11 D1 synthesis; `input/systems/immich/immich-architecture-overview.md` |
+| **ONNX** | — | Open model-exchange format in which all Immich ML models are stored, chosen for wide support and performance. | confirmed | 2026-07-11 ADR-001 (approved); `input/systems/immich/immich-architecture-overview.md` |
+| **hexagonal architecture** (Immich usage) | "ports and adapters" | Structural principle of the `immich-server` codebase: separates technology-specific implementations (`src/repositories`) from core business logic (`src/services`). | tentative | 2026-07-11 D1 synthesis; `input/systems/immich/immich-architecture-overview.md` |
 
 ---
 

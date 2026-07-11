@@ -9,10 +9,10 @@ Lifecycle changes are tracked here.
 
 ## Registry
 
-> TODO: one row per ADR, newest first, added by the `decision-record-agent`. The Title cell carries a compact statement of the decision (what was chosen, key qualifiers, related enabler/requirement IDs), not just a name.
-
 | ADR | Title | Date | Status | Severity | Supersedes | Superseded By | Author |
 |-----|-------|------|--------|----------|------------|---------------|--------|
+| ADR-002 | As-built: background work runs on Redis/BullMQ job queues; api + microservices workers co-located in one `immich-server` container by default, splittable via `IMMICH_WORKERS_INCLUDE`/`EXCLUDE` — worker split is the sanctioned scaling lever (R-02); Redis is availability-critical queue state (R-01). | 2026-07-11 | approved | MINOR | — | — | Simulated architect (demo) |
+| ADR-001 | As-built: ML inference isolated in the separate stateless `immich-machine-learning` (Python/FastAPI + ONNX) service, called synchronously over HTTP — enables independent ML scaling/sizing and memory isolation from the serving path (R-03). | 2026-07-11 | approved | MINOR | — | — | Simulated architect (demo) |
 | ADR-000 | Template | — | template | — | — | — | — |
 
 ---
