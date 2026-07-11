@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/scripts/check-indexes.sh || true",
+            "timeout": 10,
+            "statusMessage": "Checking input/ and core/artifacts/ indexes"
+          }
+        ]
+      }
+    ]
+  }
+}
