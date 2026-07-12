@@ -7,7 +7,7 @@ This repository is a structured system for AI-assisted architecture work across 
 This public repository is both a **template** and a **worked demo**:
 
 - The **`template` tag** holds the clean skeleton — every content section carries a `> TODO:` placeholder describing what belongs there; nothing engagement-specific is filled in.
-- **`main`** additionally contains **demo runs**: the architecture chain executed against the public documentation of **Immich** (a self-hosted photo/video platform) across six simulated discovery/design sessions — D1 architecture overview, D2 ML & media deep dive, D3 managed-hosting scale-up design, D4 identity & access, D5 operability & observability, and D6 customer-library onboarding. The AI agents run unattended, with the orchestrating agent acting as the architect, so you can see what the brain produces — syntheses, component specs, contracts, NFR analyses, risks, ADRs — without any confidential material. Demo outputs are unreviewed agent drafts; the proposed ADRs are deliberately left unapproved.
+- **`main`** additionally contains **demo runs**: the architecture chain executed against the public documentation of **Immich** (a self-hosted photo/video platform) across six simulated discovery/design sessions — D1 architecture overview, D2 ML & media deep dive, D3 managed-hosting scale-up design, D4 identity & access, D5 operability & observability, and D6 customer-library onboarding. The AI agents run unattended, with the orchestrating agent acting as the architect, so you can see what the brain produces — syntheses, component specs, contracts, NFR analyses, risks, ADRs — without any confidential material. Demo outputs are unreviewed agent drafts; the proposed ADRs are deliberately left unapproved. A guided tour of the demo — including the moments where the machinery caught real errors — is in **Explore the Demo** below.
 
 It is designed to:
 
@@ -42,6 +42,34 @@ Nine named agents operate on top of this foundation to produce structured output
 - **nfr-analysis-agent, integration-contract-agent, risk-assessment-agent, fitness-review-agent** -> the architecture analysis layer: NFR & quality attributes, integration contracts, risk & tech-debt, and fitness review
 - **handoff-agent** -> implementation-facing handoff documentation
 - **librarian-agent** -> index maintenance for token-efficient, coverage-aware retrieval
+
+---
+
+## Explore the Demo (guided tour)
+
+The fastest way to understand this repository is to read the demo engagement the way a reviewer would. The fiction: a managed-hosting operator evaluates Immich for a 50-instance pilot; six sessions (D1–D6) ran the chain from raw documentation to a pilot-enablement handoff. Every commit pair on `main` is one session: inputs first, chain artifacts second.
+
+**Suggested reading path** (~30 minutes):
+
+| Step | Read | What you'll see |
+|------|------|-----------------|
+| 1 | `core/1.ARCH-CONTEXT.md` | The engagement card, problem statement, and requirements registry — including how fiction is labeled and how an unknowable figure stays `[TBD]` |
+| 2 | `core/artifacts/logs/` for one run-slug (e.g. `immich-identity-access-*`) | One full session end-to-end: synthesis → risk assessment → decision → fitness review |
+| 3 | `core/2.ARCH-BASELINE.md` vs `core/3.ARCH-TARGET.md` | The as-is/target split and the shared section skeleton (§ parity) in action |
+| 4 | `core/decisions/INDEX.md` | Eight ADRs: two approved as-built records vs six deliberately-unapproved design proposals |
+| 5 | `core/artifacts/risk-register.md` + `core/arch-processes/` registers | Living registers with real status motion: R-01…R-12, open questions OQ#1…#7, the action row, ownership rulings |
+| 6 | `core/transitions/M1-managed-hosting-pilot.md` + `ENABLER-CATALOG.md` | The delivery view: six enablers with pilot-gate acceptance criteria |
+| 7 | `core/artifacts/logs/2026-07-12-immich-pilot-enablement-handoff.md` | The final DRAFT handoff — verdict "not ready to build," and why that's the honest answer |
+
+**Moments worth finding** — the machinery catching real errors during the unattended runs:
+
+- The integration contract (`core/artifacts/integration-contract-immich-server-ml.md`) records that a config variable named in the architect's own brief **does not exist in the evidence** — the agent refused to write it and documented the real mechanism instead.
+- The D2 fitness review caught a section-numbering drift against the shared skeleton; the D3 synthesis executed the correction; the D5 fitness review formally adjudicated the convention (`logs/*fitness-review.md`).
+- The D3 handoff was later **superseded, not edited** — frozen run logs stay frozen; the index carries the status flip (`core/artifacts/INDEX.md`).
+- A session-limit crash left the input index stale mid-D5; the mechanical index gate (`.claude/scripts/check-indexes.sh`) blocked work until the librarian cured it — visible in the D5 commit messages.
+- The 72-hour ML-backlog target could not be validated from evidence, so it stays `[TBD]` with a derived bound and a benchmark gate (`AI-001`) — no invented feasibility anywhere.
+
+**What the demo deliberately does not show:** ADR approval flips, transition close/baseline promotion, and `factory/` delivery — all of these require a human architect's sign-off, and no human reviewed these runs. The empty `factory/` is the human-approval rule working as designed. Evidence limits are equally explicit: the whole engagement runs on first-party documentation only (recorded as risk R-04), and the committed evidence files are agent-abridged conversions carrying their source URLs and fetch dates for verification.
 
 ---
 
@@ -95,6 +123,8 @@ Nine named agents operate on top of this foundation to produce structured output
 ---
 
 ## Getting Started (using this as a template)
+
+New here? Take the **Explore the Demo** tour above first — seeing one worked engagement makes every rule below concrete.
 
 1. **Start from the clean skeleton** — check out the `template` tag (or delete the demo content from `main`: empty `input/`, `core/artifacts/logs/`, the demo rows in the registers, and the demo ADRs).
 2. **Boot your AI host** — Claude Code boots from `CLAUDE.md`; other hosts boot through `AGENTS.md`. The required reading order and operating rules are defined there, not here.
