@@ -28,6 +28,7 @@ Each stream is tracked in `core/` by the cited IDs; this file is the phase view 
 | **WS2 — ML tier** | Dedicated remote-ML tier behind an operator-run, health-checked **load balancer**; **channel hardening** (auth + TLS at a reverse proxy fronting port 3003, network isolation); **benchmark** of per-asset inference time to size the tier and decide the NFR-003 commitment. Facial Recognition stays server-bound, out of scope. | `E-02` / NFR-003, NFR-004, NFR-006 | ADR-004 (proposed); R-03, R-06; AI-001; OQ#2, OQ#3; TARGET §3.1/§3.5; BASELINE §3.1 |
 | **WS3 — Media storage & backup** | Per-instance dedicated media volumes on supported (non-NTFS/FAT) filesystems; operator snapshot + off-instance replication backup honoring the documented **DB-first-then-filesystem** ordering; stock DB dumps retained and copied off-instance; Redis-queue-state durability. | `E-03` / NFR-005 | ADR-005 (proposed); R-01 (Redis via ADR-003); TARGET §3.4/§3.3; BASELINE §3.4/§3.3 |
 | **WS4 — Upgrade procedure** | A controlled maintenance-window upgrade covering server + startup Postgres migrations + version-aligned ML restart, rehearsed within NFR-002's **≤15 min** window; operator customizations kept minimal and reversible to preserve the stock upgrade path. | `E-04` / NFR-002, CON-001 | R-05; CON-001; TARGET §3.3; BASELINE §3.3 |
+| **WS5 — Fleet observability & health** | An operator-run **central observability plane** over the 50 stock instances: fleet-wide telemetry (opt-in, enabled as a config baseline), Prometheus-compatible scrape of every instance's **8081/8082**; central **log shipping + defined retention** of the JSON stream; operator-built **synthetic health probes + container healthchecks** over the stock `.immich` startup gate; **alerting tied to NFR-001's error budget**; per-instance data **segregated** (ADR-003). Front-door proxy `600s`/`50000M` (T26) monitored as thresholds. End-to-end tracing out of scope (docs: metrics-export only). | `E-05` / NFR-001 | ADR-007 (proposed); R-01, R-08; OQ#5; TARGET §3.2; BASELINE §3.2 |
 
 ## Baseline → target deltas (enabler-shaped)
 
@@ -61,6 +62,13 @@ Keyed by the shared skeleton (`core/0.ARCH-METAMODEL.md`): baseline §N → targ
 - **Benefit hypothesis:** upgrades complete within NFR-002's window without breaking customized instances, preserving the stock upgrade path (R-05, CON-001). Note the co-constraint: a ≤15 min upgrade spends ~34% of the NFR-001 monthly budget.
 - **Acceptance criteria (pilot gate):** a **≤ 15-min upgrade rehearsal** on a split/HA instance, with migration duration measured at pilot scale (NFR-002; the fits-window sub-claim is unverifiable from evidence until measured — R-05).
 
+### E-05 — Fleet observability & health · §3.2 → §3.2
+
+- **Type:** infrastructure
+- **Delta:** stock ships observability *primitives without a control plane* (§3.2) — opt-in 8081/8082 metrics, env-var-only JSON logging with no routing/retention/alerting, and a one-shot `.immich` startup marker-file check as the only health mechanism (no container-healthcheck guidance, OQ#5); the pilot adds an operator-run central fleet observability plane: fleet-wide-enabled scrape, central log shipping + retention, operator-built health/readiness probes + container healthchecks, and NFR-001-error-budget-tied alerting, with per-instance data segregated (ADR-003 isolated-instance alignment).
+- **Benefit hypothesis:** provides the proactive, budget-tied detection layer NFR-001 depends on across 50 instances — you cannot hold 99.9% you cannot observe (T24–T27, OQ#5); reactive complaint-driven detection (option A) cannot evidence the budget.
+- **Acceptance criteria (pilot gate):** an **induced instance failure raises an alert within the pilot detection window** — window **[TBD]** (no first-party figure to inherit; set at this gate), and every pilot instance carries an operator container health/readiness probe wired to alerting with telemetry enabled on both 8081/8082. *Log routing/retention is decided by ADR-007; the container-health probe design remains build work within this WS.*
+
 ### Gap discipline (§ reviewed, no delta — carried over)
 
 Skeleton sections this milestone reviewed but does not move, recorded not omitted (`core/0.ARCH-METAMODEL.md`, TOGAF gap analysis):
@@ -90,7 +98,8 @@ Referenced by ID; the Delivery Enablement stream (`core/arch-processes/work-stre
 - **OQ#1** — multi-node HA/failover path for the shared stores still absent (store HA design + sizing need evidence beyond the doc set). Gates E-01.
 - **OQ#2** — per-node/per-GPU ML throughput in assets/sec still unquantified; the NFR-003 figure is unmeasurable from evidence. Gates E-02's benchmark.
 - **OQ#3** — remote-ML channel security remnant: operator must supply auth / transport encryption / network isolation the docs do not specify. Gates E-02's channel hardening.
-- **Proposed ADRs awaiting approval** — ADR-003, ADR-004, ADR-005 are all `proposed`. The deltas above are written at `[Tentative]` confidence against them; the `active` → `delivered` flip and any baseline promotion are the architect's explicit call on approval (`core/AGENT-RULES.md` §9).
+- **OQ#5 (partially resolved by ADR-007)** — log routing/retention and container-health are operator-built with no first-party guidance. ADR-007 **decides the log-routing/retention half** (central shipping + defined retention); the **container-health/readiness probe design and the detection-window figure remain [TBD] build work** in WS5/E-05. Gates E-05.
+- **Proposed ADRs awaiting approval** — ADR-003, ADR-004, ADR-005, ADR-007 are all `proposed` (ADR-006 covers identity, tracked at TARGET §3.5). The deltas above are written at `[Tentative]` confidence against them; the `active` → `delivered` flip and any baseline promotion are the architect's explicit call on approval (`core/AGENT-RULES.md` §9).
 - **TARGET §5 unpopulated** — the binding-gate section is a stub; populating it is architect-approved content work (watch, not an M1 deliverable).
 
 ## Low-level design
