@@ -10,7 +10,7 @@ Copy this file and number sequentially as `ADR-001`, `ADR-002`, and so on.
 - **Date**: [YYYY-MM-DD]
 - **Author**: [Name]
 - **Severity**: [PATCH / MINOR / MAJOR]
-- **Decision type**: [integration_interface / data_architecture / technology_platform / structural / nfr_quality_attribute / security / governance / agent_behaviour / trade_off]
+- **Decision type**: [integration_interface / data_architecture / technology_platform / structural / nfr_quality_attribute / security / governance / trade_off]
 
 Note:
 The canonical lifecycle status is tracked in `core/decisions/INDEX.md`.
@@ -34,6 +34,7 @@ Do not create an ADR for:
 - trivial configuration tweaks
 - spelling fixes
 - non-impactful housekeeping
+- brain-machinery changes — their record is their commit (`core/AGENT-RULES.md` → Change history)
 
 If in doubt, create the ADR.
 

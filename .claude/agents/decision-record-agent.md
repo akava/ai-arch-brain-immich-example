@@ -15,7 +15,7 @@ Writes: a draft ADR for architect review, then the approved `core/decisions/ADR-
 
 ## When not to create an ADR
 
-Cosmetic/config tweaks, typo or comment-only changes, implementation detail that belongs in handoff, restatement of an already-active decision, or minor corrections that don't change direction or behaviour.
+Cosmetic/config tweaks, typo or comment-only changes, implementation detail that belongs in handoff, restatement of an already-active decision, or minor corrections that don't change direction or behaviour. **Brain-machinery changes** — description-model structure, agent rules, conventions — are never ADR material: their record is their commit (`core/AGENT-RULES.md` → Change history); only a significant process/governance decision about how the *work* runs may still warrant one.
 
 **Scoping test — ADRs serve work, not their own sake.** Ask which enabler delta (active `core/transitions/` file) or binding gate this decision unblocks. A decision serving no identifiable work is direction, not a record to create: target content may stay architect-directional without an ADR until it firms into commitment, typically during a transition (`core/0.ARCH-METAMODEL.md` → Status convention).
 
@@ -34,7 +34,7 @@ Confirm the decision is workable; halt and ask if the statement or context is mi
 
 1. **Number & slug.** Assign the next sequential `ADR-[NNN]`; derive a short slug. File: `ADR-[NNN]-[slug].md`.
 2. **Related decisions.** For each relevant existing ADR, decide whether the new one **supersedes**, is **related_to**, or **conflicts_with** it. Do not modify the older ADR file.
-3. **Classify.** Set `decision_type` (integration_interface, data_architecture, technology_platform, structural, nfr_quality_attribute, security, governance, agent_behaviour, trade_off) and `version_level` (PATCH | MINOR | MAJOR | N/A).
+3. **Classify.** Set `decision_type` (integration_interface, data_architecture, technology_platform, structural, nfr_quality_attribute, security, governance, trade_off) and `version_level` (PATCH | MINOR | MAJOR | N/A).
 4. **Populate.** Fill every field. Alternatives must be meaningfully distinct, or single-path logic stated explicitly. Consequences must cover what the decision enables, trades off, and leaves as risk — and which layers it changes: `core/3.ARCH-TARGET.md` rules now, transition deltas for the delivering phase; `core/2.ARCH-BASELINE.md` only when the change is delivered (0.ARCH-METAMODEL.md → Time boundary test).
 5. **Status & ARCH-TARGET reconciliation.** Set `proposed` when approval is pending, `approved` when accepted (never `active`). The `proposed` → `approved` flip is the architect's explicit call — never inferred from review silence or from the draft being accepted for storage. ARCH-TARGET reconciliation against the ADR — including while it is still proposed — follows AGENT-RULES.md §8. On the flip to `approved`, promote the cited `[Tentative]` entries and sync the ADR body's status label to the registry (see Immutability). Note the directional-target rule (`core/0.ARCH-METAMODEL.md` → Status convention): target content may be architect-directional without any ADR — an ADR is required when direction firms into commitment, typically during a transition; do not demand an ADR merely because a directional entry exists.
 6. **Finalise & store.** Generate the draft → present for architect review → apply corrections → store the approved ADR → update `core/decisions/INDEX.md`. If it supersedes an older ADR, set that row to `superseded` in the index (not in the ADR file).

@@ -198,7 +198,7 @@ The artifacts are required — their weight is not. Every generated file follows
 
 ### Change history
 
-Change history lives in git. Files keep no version-history tables, change-log sections, or audit rows — and no meta-commentary about an edit inside the artifact itself; the commit message carries it. This covers decisions about the brain's own machinery too: a machinery decision's record is its commit — the project ADR registry records system decisions, not brain-tooling ones.
+Change history lives in git. Files keep no version-history tables, change-log sections, or audit rows — and no meta-commentary about an edit inside the artifact itself; the commit message carries it. This covers decisions about the brain's own machinery too: **a machinery decision's record is its commit — the project ADR registry records system decisions, not brain-tooling ones.** Machinery changes land directly in their governing file (`core/0.ARCH-METAMODEL.md` for description structure, this file for agent rules), architect-approved per §9. One carve-out: a significant process/governance decision about how the *work* runs may still warrant an ADR (`core/0.ARCH-METAMODEL.md` → Content boundary rule).
 
 ### Quality bar
 

@@ -5,6 +5,8 @@ This file is the canonical registry of all Architecture Decision Records.
 ADR files are immutable once created.
 Lifecycle changes are tracked here.
 
+**Scope:** ADRs record decisions about the system under design, not the brain's machinery (`core/AGENT-RULES.md` → Change history).
+
 ---
 
 ## Registry
