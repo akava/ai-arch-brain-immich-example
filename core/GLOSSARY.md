@@ -37,7 +37,7 @@ Reuses the `core/0.ARCH-METAMODEL.md` convention:
 
 | Canonical | Variants seen | Definition | Status | Source / owner |
 |-----------|---------------|------------|--------|----------------|
-| **Immich** | — | Self-hosted photo and video management platform; the system-of-interest of this engagement. Client-server architecture, AGPL v3. | tentative | 2026-07-11 D1 synthesis; `input/systems/immich/immich-repo-readme.md` |
+| **Immich** | — | Self-hosted photo and video management platform; the system-of-interest of this engagement. Client-server architecture, AGPL v3. | confirmed (2026-07-16, architect — recurs across all six sessions, every ADR and living artifact) | 2026-07-11 D1 synthesis; `input/systems/immich/immich-repo-readme.md` |
 | **immich-server** | "Immich Server", "the server", "the backend" | The Nest.js/Node.js backend container: serves the REST API and runs the background-job workers. Follows hexagonal architecture. | tentative | 2026-07-11 D1 synthesis; `input/systems/immich/immich-architecture-overview.md` |
 | **immich-machine-learning** | "the ML service", "machine learning service" | Python/FastAPI service to which all ML operations are externalized; runs ONNX models; separately deployable or disableable. | confirmed | 2026-07-11 ADR-001 (approved); `input/systems/immich/immich-architecture-overview.md` |
 | **api worker** | "api" (worker) | Worker inside `immich-server` that responds to API requests for data and files from the web and mobile clients. | confirmed | 2026-07-11 ADR-002 (approved); `input/systems/immich/immich-jobs-and-workers.md` |
