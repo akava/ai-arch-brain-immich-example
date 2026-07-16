@@ -9,6 +9,33 @@
 
 ---
 
+## Execution log (branch `linus-review-remediation`)
+
+Executed 2026-07-16 after v2 reconciliation + a second independent review. One commit per item.
+
+**Landed (verified):**
+- **A1** — un-swallowed the index hook (`\|\| true` removed; intent documented in the script).
+- **A2** — `check-adr-immutability.sh` + version-controlled `.githooks/pre-commit`: resolves ADR status from `INDEX.md`, blocks edits/deletes to approved/superseded/deprecated ADRs, `ALLOW_ADR_STATUS_SYNC=1` escape hatch for the label-only sync. Tested: blocks approved edit, allows under flag, permits proposed edit.
+- **A3** — `lint-brain.sh`: caps artifacts-INDEX Summary ≤25 words, synthesis ≤120 / fitness ≤80 lines, + the B1/B3 sync-check. Manual/CI (not pre-commit-wired).
+- **C1/C2** — fitness review gains a mandatory adversarial per-ADR challenge (new step 6, verdict-gating) and marks the hygiene checks advisory/separate.
+- **B4/B5** — metamodel is a required read (AGENTS.md points, doesn't copy); drift-prone "nine agents" counts removed.
+- **B1/B3** — CLAUDE.md §2 → pointer; AGENTS.md mirror declared; agent Output-preamble canonicalized in the rubric with a verbatim drift check (tested).
+- **E1/E2** — BASELINE §3 anchors reconciled to the landed NFR rows; `Immich` promoted `confirmed`.
+- **E3** — deleted empty `.claude/mcp` + `.claude/prompts`.
+- **E6** — 18 over-length artifacts-INDEX summaries compacted to ≤25 words (librarian-agent); lint clean, count intact.
+- **D3** — ADR-009/010 drafted (**proposed**) superseding ADR-001/002 as inherited-constraint records; INDEX updated; ADR-001/002 bodies untouched. **Awaiting architect approval.**
+
+**Deferred by architect decision:** B6 (split `[Pending-verification]` tag — metamodel vocabulary change), A4 (per-file index manifest — INDEX-format change).
+
+**Dropped by architect decision:** E4 (framework mappings are load-bearing — no removal), E7 (TODO stubs left as honest markers), CF-08 provenance machinery (already disclosed; downgraded in v2).
+
+**Open for architect (surfaced, not actioned):**
+1. Approve/reject ADR-009/010 (on approval, flip ADR-001/002 → `superseded`).
+2. Re-adjudicate the six permanently-`proposed` ADRs (003–008) — proposed as an action-register row, not written unilaterally (register rule: propose, never write).
+3. Residual lint: one synthesis log is 122 lines (cap 120) — trim via librarian or accept.
+
+---
+
 ## 0. Reconciliation after independent review (v2 — authoritative)
 
 A fourth, skeptical pass verified this plan's claims against the repo and returned **SOUND-WITH-CHANGES**. The following overrides take precedence over anything below that conflicts:
