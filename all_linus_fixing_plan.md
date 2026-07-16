@@ -5,7 +5,26 @@
 **Status:** Proposed — approval required before execution. Architect-gated items are marked; they do not move without explicit instruction (`CLAUDE.md` §7, `AGENT-RULES.md` §9).
 **Sources consolidated:** `opus_linus_fixing_plan.md`, `sonnet_linus_fixing_plan.md`, `fable_linus_fixing_plan.md` — three passes over metamodel, machinery, and content. This file supersedes all three for execution; the originals are kept as provenance.
 
-> **Scope class:** machinery + hygiene. Per the "machinery, not architecture" rule, execution lands as **commits, not ADRs** — except the ADR-registry items (CF-07) and the input-provenance policy (CF-08), which are architect-gated and ADR-/rule-routed.
+> **Scope class:** machinery + hygiene. Per the "machinery, not architecture" rule, execution lands as **commits, not ADRs** — except the ADR-registry items (CF-07), which are architect-gated and ADR-routed.
+
+---
+
+## 0. Reconciliation after independent review (v2 — authoritative)
+
+A fourth, skeptical pass verified this plan's claims against the repo and returned **SOUND-WITH-CHANGES**. The following overrides take precedence over anything below that conflicts:
+
+- **CF-10 — metrics were false, corrected.** Measured: `input/` ≈ 10.7k words, `core/artifacts/` ≈ **34.9k** words → amplification **~2.7:1**, not "6.3:1 / 57k." Those numbers are struck. The qualitative finding stands and is understated: the worst fact (sequential-multi-URL / no-LB) lives in **~10 substantive files** (+2 index rows). E6 keeps the one-home sweep of that fact; drops the false headline.
+- **CF-08 — mostly false, downgraded.** The D3 brief front-matter reads `provenance: simulated engagement fiction (demo) — architect-authored`; every derived row is bolded "client-stated fiction" `[Tentative]` and NFR-003 is `[TBD] — not verifiable`. The self-authored/self-validated loop is *already disclosed at every layer*. **WS-D D2 is reduced to at most a one-line `source:` tag in `input/INDEX.md`; the sign-off gate + librarian/lint enforcement are dropped** (they'd add the machinery §6 says to avoid).
+- **A1 — SessionStart cannot block; decision-gate #1 is moot.** Just remove `|| true`; the only possible outcome is warn-loudly. Done.
+- **A2 — guard hook redesigned.** ADR status is **not uniformly in bodies** (ADR-003–006 carry only a prose `Status note:`; canonical status is `core/decisions/INDEX.md`). Therefore: **primary guard = a committed `check-adr-immutability.sh` resolving status from `INDEX.md`, runnable as pre-commit/CI** (handles Write+Edit uniformly, no mid-session false-block). Optional live PreToolUse hook, if built, must **hard-deny `Write` only** to approved-ADR paths and **`ask` (not deny) on `Edit`** — never hard-deny Edit, or it breaks the documented label-only status-sync exception (`INDEX.md:44`). Drop the action-register row enforcement and the stateful transition/BASELINE session-flag from v1 (no such flag mechanism exists in the repo).
+- **A2/E1 contradiction resolved.** A2 must **not** cover `core/2.ARCH-BASELINE.md` header edits — that would block E1, which runs earlier. BASELINE promotion is left to the semantic rule (D1) + adversarial fitness review (C1).
+- **CF-02 / A3 — cap Summary only.** The ≤25-word cap applies to the Summary cell; keyword cells are uncapped *by design* ("Keywords carry retrieval," `librarian-agent.md`). Only `core/artifacts/INDEX.md` breaches (avg ~42, worst ~100); `input/INDEX.md` is compliant. Drop A3's "keyword cell capped."
+- **CF-15 / E4 — premise corrected; do not strip.** The framework mappings *are* consumed (C-ID spell-out rule, arc42 §-mapping, SAFe baseline/target/transition correspondence). E4 stays architect-gated and is reduced to "optionally annotate which mappings are load-bearing" — **no removal**.
+- **CF-14 / B5 — roster is in 5 homes**, not 4: add `guides/playbooks/agents-playbook.md` and `guides/onboarding/create-new-project-from-template.md` to the de-hardcode list.
+- **B1 — AGENTS.md is already pointer-style** (deliberate 5-rule minimal-boot list). Drop the sync-marker-mirror treatment for it and decision-gate #7; the genuine self-containment case is the **agent skeletons (B3)** only.
+- **CF-07 phrasing** — drop "fabricated Option B"; it's the standard rejected-alternative section. The real finding is self-/simulated-approval + 6 of 8 ADRs stuck `proposed`.
+
+Confirmed TRUE and safe to execute as written: **CF-01, CF-06, CF-07(core), CF-09, CF-11, CF-16, CF-17, CF-18, CF-19; A1; E1; E2.**
 
 ---
 
