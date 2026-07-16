@@ -23,16 +23,15 @@ Executed 2026-07-16 after v2 reconciliation + a second independent review. One c
 - **E1/E2** — BASELINE §3 anchors reconciled to the landed NFR rows; `Immich` promoted `confirmed`.
 - **E3** — deleted empty `.claude/mcp` + `.claude/prompts`.
 - **E6** — 18 over-length artifacts-INDEX summaries compacted to ≤25 words (librarian-agent); lint clean, count intact.
-- **D3** — ADR-009/010 drafted (**proposed**) superseding ADR-001/002 as inherited-constraint records; INDEX updated; ADR-001/002 bodies untouched. **Awaiting architect approval.**
+- **D3** — ADR-009/010 drafted (**proposed**) superseding ADR-001/002 as inherited-constraint records; INDEX updated; ADR-001/002 bodies untouched.
 
 **Deferred by architect decision:** B6 (split `[Pending-verification]` tag — metamodel vocabulary change), A4 (per-file index manifest — INDEX-format change).
 
 **Dropped by architect decision:** E4 (framework mappings are load-bearing — no removal), E7 (TODO stubs left as honest markers), CF-08 provenance machinery (already disclosed; downgraded in v2).
 
-**Open for architect (surfaced, not actioned):**
-1. Approve/reject ADR-009/010 (on approval, flip ADR-001/002 → `superseded`).
-2. Re-adjudicate the six permanently-`proposed` ADRs (003–008) — proposed as an action-register row, not written unilaterally (register rule: propose, never write).
-3. Residual lint: one synthesis log is 122 lines (cap 120) — trim via librarian or accept.
+**Intentional demo state — not open decisions:** the six permanently-`proposed` ADRs (003–008) and the ADR-009/010 supersession drafts are deliberate lifecycle illustrations for this demo/template. Proposed-forever ADRs show what an un-ratified decision looks like; ADR-009/010 demonstrate the supersede-don't-edit pattern for correcting a prior decision. No approval or re-adjudication is required — approving them would erase the illustration.
+
+**Residual (minor):** one synthesis log is 122 lines (cap 120) — trim via librarian or accept.
 
 ---
 
