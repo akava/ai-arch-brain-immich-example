@@ -49,7 +49,7 @@ The goal is to keep:
     INDEX.md        -> lightweight map of structured artifacts
     risk-register.md            -> living risk & tech-debt register (R-NN)
 
-/.claude/agents     -> the nine architecture agents (synthesis-agent ... librarian-agent; legacy SKILL-001...009)
+/.claude/agents     -> the architecture agents (synthesis-agent ... librarian-agent; legacy SKILL-001...009) — the directory is the roster; AGENT-RULES.md registry adds dependency-chain semantics
 /.claude/commands   -> workflow entrypoints as Claude Code commands (user-invoked chains)
 /guides             -> human-facing playbooks, onboarding, and workflows
 /input              -> raw project inputs

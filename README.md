@@ -2,7 +2,7 @@
 
 ## What This Is
 
-This repository is a structured system for AI-assisted architecture work across discovery, integration design, decision-making, quality attributes, risk tracking, and implementation-facing delivery — an **architecture brain**: the machinery (metamodel, agent rules, nine agents, workflow commands) is reusable, and the content layers (`core/` documents, `input/`, artifacts, decisions) are filled per engagement.
+This repository is a structured system for AI-assisted architecture work across discovery, integration design, decision-making, quality attributes, risk tracking, and implementation-facing delivery — an **architecture brain**: the machinery (metamodel, agent rules, the agent roster, workflow commands) is reusable, and the content layers (`core/` documents, `input/`, artifacts, decisions) are filled per engagement.
 
 This public repository is both a **template** and a **worked demo**:
 
@@ -114,7 +114,7 @@ The fastest way to understand this repository is to read the demo engagement the
 
 /.claude
   prompts/          -> Reusable Claude prompts
-  agents/           -> The nine architecture agents
+  agents/           -> The architecture agents
   commands/         -> Workflow entrypoints as Claude Code commands
   scripts/          -> Mechanical checks (index inventory)
   mcp/              -> MCP references
@@ -130,7 +130,7 @@ New here? Take the **Explore the Demo** tour above first — seeing one worked e
 2. **Boot your AI host** — Claude Code boots from `CLAUDE.md`; other hosts boot through `AGENTS.md`. The required reading order and operating rules are defined there, not here.
 3. **Fill the problem space** — every content file in `core/` carries per-section `> TODO:` placeholders saying exactly what lands where. Begin with the engagement card in `core/1.ARCH-CONTEXT.md`.
 4. **Land evidence** — drop raw material into `input/` (folder semantics are described in `input/INDEX.md`), then run the `librarian-agent` to index it.
-5. **Run the chain** — use the workflow entrypoints in `.claude/commands/` (e.g. `/run-arch-chain` from raw input to validated, decision-backed output) or invoke the nine agents individually per `core/AGENT-RULES.md`.
+5. **Run the chain** — use the workflow entrypoints in `.claude/commands/` (e.g. `/run-arch-chain` from raw input to validated, decision-backed output) or invoke the agents individually per `core/AGENT-RULES.md`.
 
 ---
 

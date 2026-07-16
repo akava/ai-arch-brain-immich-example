@@ -20,7 +20,7 @@ This repository itself is the template for another architecture engagement: copy
 
 8. **Reset inputs.** Empty the `input/` subfolders (keep `.gitkeep`) and reset `input/INDEX.md`.
 
-9. **Review agents.** The 9 agents are general-purpose for architecture work; adjust the registry in `core/AGENT-RULES.md` if the new engagement needs different agents.
+9. **Review agents.** The agents are general-purpose for architecture work; adjust the registry in `core/AGENT-RULES.md` if the new engagement needs different agents.
 
 10. **Confirm readiness.** Run the `/drift-check` command. Execution should stop cleanly if the minimum context is not yet filled.
 

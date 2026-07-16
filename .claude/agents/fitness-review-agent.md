@@ -17,6 +17,7 @@ Routes to: decision-record-agent (conflicts) · risk-assessment-agent (risks)
 - Check against populated `core/3.ARCH-TARGET.md` sections; where a section is `[TBD]`, record a coverage gap, not a pass.
 - Use only fitness criteria grounded in context, spec, and ADRs.
 - Tag every finding **machinery** (the brain's rules/structure) or **content** (project facts, ARCH-TARGET entries, register rows). Content findings are flagged for the architect, never fixed in-run; "fix in place" applies only to the artifact under review, never to approval-owned files (register rows, ARCH-CONTEXT facts, GLOSSARY statuses, ARCH-TARGET entries).
+- The review has two distinct jobs that must not be conflated: **design soundness** — is each decision *right* (step 6, adversarial) — and **brain hygiene** — is the paperwork clean (step 7, advisory). A tidy brain is not a sound architecture; hygiene findings never, on their own, carry a proceed verdict, and a clean logbook never substitutes for an unanswered challenge to the design.
 
 ## Steps
 
@@ -33,16 +34,17 @@ Routes to: decision-record-agent (conflicts) · risk-assessment-agent (risks)
    - a fact restated in two layers instead of cross-referenced (one home per fact)
    - an entry missing its status tag or provenance citation
    Check skeleton conformance (`core/0.ARCH-METAMODEL.md`): BASELINE and TARGET expose identical §1–§7 headings; a skeleton change that bypassed the metamodel is a machinery finding.
-6. Brain hygiene check — catch registry and context drift while it is small:
+6. **Design soundness (adversarial) — is the decision right, not just internally consistent.** Steps 3–5 only check that the spec, ADRs, and artifacts agree with each other; they cannot catch a coherent-but-wrong architecture. So challenge every in-scope ADR: make the strongest case it is *wrong*. For each, state the conditions under which its rejected option wins, the assumption or evidence gap that would flip it, and the test/benchmark/data that would settle it. Record one `challenge` per ADR — or an explicit "no credible counter-case found, because…". A challenge the review cannot answer is left `answered: false`, **routed to decision-record-agent**, and caps the verdict (see Output: an open challenge bars `proceed`/`proceed_with_caveats`). This is the soundness job — kept separate from the hygiene checks below, which can never on their own carry a proceed verdict.
+7. Brain hygiene check (advisory) — catch registry and context drift while it is small. These are logbook/paperwork checks, scored and reported **separately from the step-6 soundness verdict**; they never, on their own, make a review pass or fail its architecture:
    - `core/1.ARCH-CONTEXT.md` accumulates no solution facts (problem space + engagement card only — the subject/time tests route architecture facts to the solution files); the latest processed session is reflected in its populating work stream's status/landed sections (`core/arch-processes/work-streams/`) — a session deliberately homed in `lab/` that changes no system fact needs no entry. Counts and statuses live only in the decisions/artifacts indexes.
    - `core/arch-processes/action-register.md` checkpoints: record every past-due checkpoint as a finding, each with a proposed new date (or a removal/drop proposal) — never advance a date unapproved (AGENT-RULES.md §7).
    - `core/arch-processes/open-question-register.md` rows carry their owning cross-link (`AI-NNN`, ADR, or risk) where one exists; concluded questions are proposed for removal, never archived in place.
    - `core/GLOSSARY.md`: propose `tentative` terms that meet the promotion bar (AGENT-RULES.md §6) for the architect's confirmation.
    - the active `core/transitions/` file's status and confidence reflect reality; a status flip or a baseline promotion without recorded architect approval is a machinery finding (AGENT-RULES.md §9).
-7. Run-yield check — processed input must land something durable or be explicitly accepted as corroboration-only. (For a non-input target — machinery or rule work — "landed" means durable rule, ARCH-TARGET, or living-artifact changes.) List what the reviewed run changed in the brain: ARCH-TARGET / ARCH-BASELINE / transition / arch-processes entries, living artifacts, ADRs, register rows, glossary promotions. Corroborating an already-tracked item counts as yield only if it changed a status or confidence somewhere. If nothing landed, record a **`no_durable_landing` finding for human review** — name the blocked reason (most often "no section holds this content type") and the candidate remedy: extend the shared skeleton **via `core/0.ARCH-METAMODEL.md` first** (the gate — e.g. §5 for delivery/operating constraints, or a new on-demand viewpoint), home in `core/1.ARCH-CONTEXT.md` (needs/goals/requirements), `core/arch-processes/` (how-the-work-runs facts) or `lab/` (exploration), or accept as corroboration-only. Escalate to major severity when the same content type burns a second run.
-8. Record findings with severity and a verdict; route conflicts to decision-record-agent and risks to risk-assessment-agent. A minor finding already flagged by a prior review is not re-flagged a third time: either fix it in place (obvious single-artifact correction) or give it an owner — route to decision-record-agent or propose a register action.
-9. Save the artifact and state the librarian hand-off in your report — the main loop indexes it (AGENT-RULES.md → Orchestration).
-10. Where a registered action's brain change has now landed (e.g. an ADR approved, a ARCH-TARGET section reconciled), **propose** removing that row for the architect's approval — don't edit `core/arch-processes/action-register.md` unprompted (AGENT-RULES.md §7).
+8. Run-yield check — processed input must land something durable or be explicitly accepted as corroboration-only. (For a non-input target — machinery or rule work — "landed" means durable rule, ARCH-TARGET, or living-artifact changes.) List what the reviewed run changed in the brain: ARCH-TARGET / ARCH-BASELINE / transition / arch-processes entries, living artifacts, ADRs, register rows, glossary promotions. Corroborating an already-tracked item counts as yield only if it changed a status or confidence somewhere. If nothing landed, record a **`no_durable_landing` finding for human review** — name the blocked reason (most often "no section holds this content type") and the candidate remedy: extend the shared skeleton **via `core/0.ARCH-METAMODEL.md` first** (the gate — e.g. §5 for delivery/operating constraints, or a new on-demand viewpoint), home in `core/1.ARCH-CONTEXT.md` (needs/goals/requirements), `core/arch-processes/` (how-the-work-runs facts) or `lab/` (exploration), or accept as corroboration-only. Escalate to major severity when the same content type burns a second run.
+9. Record findings with severity and a verdict; route conflicts to decision-record-agent and risks to risk-assessment-agent. **An unanswered design-soundness challenge (step 6, `answered: false`) bars a `proceed`/`proceed_with_caveats` verdict** — either resolve it, or route it to decision-record-agent and return `do_not_proceed` until the decision is re-adjudicated. A minor finding already flagged by a prior review is not re-flagged a third time: either fix it in place (obvious single-artifact correction) or give it an owner — route to decision-record-agent or propose a register action.
+10. Save the artifact and state the librarian hand-off in your report — the main loop indexes it (AGENT-RULES.md → Orchestration).
+11. Where a registered action's brain change has now landed (e.g. an ADR approved, a ARCH-TARGET section reconciled), **propose** removing that row for the architect's approval — don't edit `core/arch-processes/action-register.md` unprompted (AGENT-RULES.md §7).
 
 ## Output
 
@@ -55,11 +57,17 @@ fitness_review:
   inputs_reviewed: [context, spec sections, ADRs, artifacts]
   checks:
     - id: [Fn — stable; later reviews reference it instead of re-flagging]
-      dimension: [context_alignment | spec_conformance | adr_consistency | internal_consistency | brain_hygiene]
+      dimension: [context_alignment | spec_conformance | adr_consistency | internal_consistency | design_soundness | brain_hygiene]
       finding: [observation]
       severity: [info | minor | major | blocker]
       evidence: [reference]
       route_to: [decision-record-agent | risk-assessment-agent | none]
+  challenges:                        # step 6 — one per in-scope ADR; the soundness record
+    - adr: [ADR-NNN]
+      counter_case: [strongest argument the decision is wrong]
+      flip_conditions: [when the rejected option wins / which assumption must break]
+      settling_evidence: [test, benchmark, or data that would resolve it]
+      answered: [true | false]       # false = an open challenge the review could not close → route to decision-record-agent, caps verdict
   run_yield:
     landed: [ARCH-TARGET / ARCH-BASELINE / ARCH-CONTEXT / transition / arch-processes entries, living artifacts, ADRs, register rows, glossary promotions — or None]
     verdict: [landed | corroboration_only | no_durable_landing]
@@ -71,7 +79,9 @@ fitness_review:
 
 ## Done when
 
-- Review is independent; context, spec, ADRs, internal consistency, and brain hygiene (logbook cleanliness, work-stream currency, register checkpoints) all checked.
+- Review is independent; context, spec, ADRs, and internal consistency all checked.
+- **Design soundness done:** every in-scope ADR carries a `challenge` (a real counter-case or an explicit "none found, because…"); any `answered: false` challenge is routed to decision-record-agent and bars a proceed verdict.
+- Brain hygiene (logbook cleanliness, work-stream currency, register checkpoints) checked and reported **as advisory**, separate from the soundness verdict.
 - Run yield stated; a `no_durable_landing` run is flagged for human review, never silently passed.
 - Conflicts routed to decision-record-agent; `[TBD]` spec sections logged as gaps.
 - A clear proceed / caveats / stop verdict given.

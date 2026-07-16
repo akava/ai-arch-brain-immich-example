@@ -16,9 +16,10 @@ Execution mechanics — agent rules, output standards, lifecycle gates — live 
 Before doing substantial work, the agent must read:
 
 1. `core/1.ARCH-CONTEXT.md`
-2. `core/3.ARCH-TARGET.md` (structure per `core/0.ARCH-METAMODEL.md`)
-3. `core/AGENT-RULES.md`
-4. `REPO_MAP.md`
+2. `core/0.ARCH-METAMODEL.md` — the shared skeleton and integrity rules every other layer is structured by (everything cites it)
+3. `core/3.ARCH-TARGET.md`
+4. `core/AGENT-RULES.md`
+5. `REPO_MAP.md`
 
 `AGENTS.md` boots non-Claude agent hosts into this same operating model; when operating from `CLAUDE.md`, there is nothing further to read there.
 
@@ -55,14 +56,7 @@ It must not bypass:
 
 ### 2. No silent invention
 
-The agent must not:
-
-- invent missing requirements
-- invent system behaviour
-- invent components or services
-- invent constraints
-- invent decisions
-- fill critical gaps with generic assumptions
+The operative rule is `core/AGENT-RULES.md` → Non-negotiables ("No invention of missing facts, goals, constraints, systems, or components") — it binds here without restatement. In behavioural terms: the agent invents no requirement, behaviour, component, constraint, or decision, and fills no critical gap with a generic assumption.
 
 If critical information is missing:
 - stop execution
