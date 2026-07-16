@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # Verify input/INDEX.md and core/artifacts/INDEX.md declared totals match the filesystem.
 # Exit 0: both match. Exit 1: mismatch or unparseable index — run SKILL-009 before reading that directory.
+# NOTE: the SessionStart hook (.claude/settings.json) intentionally runs this WITHOUT `|| true`.
+# A SessionStart hook cannot abort startup on any exit code, so the non-zero exit is a loud,
+# unmissable warning — not a blocker. Do not re-add `|| true`; that only re-hides a real mismatch.
 set -uo pipefail
 cd "$(dirname "$0")/../.."
 
