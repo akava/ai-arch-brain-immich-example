@@ -16,9 +16,10 @@ Execution mechanics — agent rules, output standards, lifecycle gates — live 
 Before doing substantial work, the agent must read:
 
 1. `core/1.ARCH-CONTEXT.md`
-2. `core/3.ARCH-TARGET.md` (structure per `core/0.ARCH-METAMODEL.md`)
-3. `core/AGENT-RULES.md`
-4. `REPO_MAP.md`
+2. `core/0.ARCH-METAMODEL.md` — the shared skeleton and integrity rules every other layer is structured by (everything cites it)
+3. `core/3.ARCH-TARGET.md`
+4. `core/AGENT-RULES.md`
+5. `REPO_MAP.md`
 
 `AGENTS.md` boots non-Claude agent hosts into this same operating model; when operating from `CLAUDE.md`, there is nothing further to read there.
 

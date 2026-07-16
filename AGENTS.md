@@ -5,7 +5,7 @@ Universal boot file for agent hosts that follow the `AGENTS.md` convention. This
 ## Boot sequence
 
 1. Read `CLAUDE.md` — the agent operating rules (behavior, delegation, approval, output locations).
-2. Follow its Required Reading Order: `core/1.ARCH-CONTEXT.md`, `core/3.ARCH-TARGET.md`, `core/AGENT-RULES.md`, `REPO_MAP.md`.
+2. Follow its Required Reading Order (defined once in `CLAUDE.md` — not duplicated here, so it can't drift).
 3. Execute work through the agent definitions in `.claude/agents/` and the workflow entrypoints in `.claude/commands/`.
 
 ## If your host loads only this file
