@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Version-controlled pre-commit hook. Enable once per clone with:
+#     git config core.hooksPath .githooks
+# Enforces ADR immutability from the canonical registry (core/decisions/INDEX.md).
+exec "$(git rev-parse --show-toplevel)/.claude/scripts/check-adr-immutability.sh"
