@@ -41,6 +41,14 @@ Routes to: <agent> (when) · <agent> (when)   # replaces a "SCOPE BOUNDARY" sect
 Scope is expressed positively as a one-line `Routes to:` — what this agent hands off and to
 whom. A dedicated "what this agent does NOT do" section is rarely worth its length.
 
+A schema-bearing `## Output` section opens with one canonical sentence — defined once here and
+mirrored verbatim by every such agent, so the copies can't silently drift. `.claude/scripts/lint-brain.sh`
+extracts the text between the markers below and fails if any agent's copy diverges:
+
+<!-- canon:output-preamble -->
+This schema is the file's **skeleton** — write each field once, as headings/tables/prose; never append a yaml copy of what the file already says. Lean output standard: AGENT-RULES.md → Output Standards.
+<!-- /canon:output-preamble -->
+
 ### 3. No stale or meta content
 
 Write for the next executor, not the last conversation. Cut session narrative, dated

@@ -13,7 +13,7 @@ Universal boot file for agent hosts that follow the `AGENTS.md` convention. This
 The five rules that must survive even a minimal boot:
 
 - `core/` is the source of truth; follow the execution rules and agent dependencies in `core/AGENT-RULES.md`.
-- Invent nothing — missing facts, components, constraints, or decisions stop the work; name the gap and the next step.
+- Invent nothing — missing facts, components, constraints, or decisions stop the work; name the gap and the next step. <!-- minimal-boot mirror of core/AGENT-RULES.md → Non-negotiables; kept self-contained for hosts that load only this file -->
 - All output is draft until an architect explicitly approves it; approval means ownership.
 - Before reading `input/` or `core/artifacts/`, verify their `INDEX.md` matches the filesystem (count rows vs files); on mismatch run the `librarian-agent` (`.claude/agents/librarian-agent.md`) first.
 - Use canonical names from `core/GLOSSARY.md`; flag ambiguities, never silently pick a spelling.

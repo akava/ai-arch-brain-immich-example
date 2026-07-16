@@ -56,14 +56,7 @@ It must not bypass:
 
 ### 2. No silent invention
 
-The agent must not:
-
-- invent missing requirements
-- invent system behaviour
-- invent components or services
-- invent constraints
-- invent decisions
-- fill critical gaps with generic assumptions
+The operative rule is `core/AGENT-RULES.md` → Non-negotiables ("No invention of missing facts, goals, constraints, systems, or components") — it binds here without restatement. In behavioural terms: the agent invents no requirement, behaviour, component, constraint, or decision, and fills no critical gap with a generic assumption.
 
 If critical information is missing:
 - stop execution

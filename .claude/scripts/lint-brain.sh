@@ -54,5 +54,30 @@ check_budget() {
 check_budget 'core/artifacts/logs/*-synthesis.md' "$SYNTH_MAX"
 check_budget 'core/artifacts/logs/*-fitness-review.md' "$FITNESS_MAX"
 
+# --- 3. Canonical-text sync check (B1/B3) -----------------------------------
+# The Output-schema preamble is defined once in the authoring rubric between
+# <!-- canon:output-preamble --> markers and mirrored verbatim by every schema-bearing
+# agent. Fail if any agent's copy diverges from the canon (silent drift of a duplicated line).
+RUBRIC="guides/playbooks/agent-authoring-rubric.md"
+if [ -f "$RUBRIC" ]; then
+  canon=$(awk '/<!-- canon:output-preamble -->/{f=1;next} /<!-- \/canon:output-preamble -->/{f=0} f' "$RUBRIC" \
+          | sed '/^[[:space:]]*$/d' | head -1)
+  if [ -z "$canon" ]; then
+    echo "SYNC-CANON  $RUBRIC — canon:output-preamble block is empty or missing"
+    rc=1
+  else
+    for a in .claude/agents/*.md; do
+      [ -e "$a" ] || continue
+      # only agents that carry the preamble line (skip agents with no such line, e.g. utilities)
+      copy=$(grep -F 'This schema is the file' "$a" | head -1)
+      [ -z "$copy" ] && continue
+      if [ "$copy" != "$canon" ]; then
+        echo "SYNC-DRIFT  $a — Output preamble diverges from canon in $RUBRIC"
+        rc=1
+      fi
+    done
+  fi
+fi
+
 [ "$rc" -eq 0 ] && echo "lint-brain: OK — no violations"
 exit $rc
